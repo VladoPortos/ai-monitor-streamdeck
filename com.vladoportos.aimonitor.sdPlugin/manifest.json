@@ -1,0 +1,101 @@
+{
+  "Name": "AI Monitor",
+  "Version": "0.1.0",
+  "Author": "Vladimir Strycek",
+  "Description": "Anthropic plan usage and service status on your Stream Deck — account-wide, zero per-machine setup.",
+  "Category": "Productivity",
+  "CategoryIcon": "imgs/plugin/category",
+  "Icon": "imgs/plugin/marketplace",
+  "URL": "https://github.com/VladoPortos/ai-monitor-streamdeck",
+  "PropertyInspectorPath": "ui/usage-bucket.html",
+  "CodePath": "bin/plugin.js",
+  "SDKVersion": 2,
+  "Software": { "MinimumVersion": "6.5" },
+  "OS": [
+    { "Platform": "windows", "MinimumVersion": "10" },
+    { "Platform": "mac", "MinimumVersion": "12" }
+  ],
+  "Nodejs": { "Version": "20", "Debug": "enabled" },
+  "Actions": [
+    {
+      "UUID": "com.vladoportos.aimonitor.usagebucket",
+      "Name": "Usage — Bucket",
+      "Tooltip": "Pick a bucket: 5h, Weekly, Sonnet, Opus, or Claude Design",
+      "Icon": "imgs/actions/usage",
+      "PropertyInspectorPath": "ui/usage-bucket.html",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [{ "Image": "imgs/actions/usage" }]
+    },
+    {
+      "UUID": "com.vladoportos.aimonitor.usagehead",
+      "Name": "Usage — Headline",
+      "Tooltip": "Auto-shows the bucket with the highest utilization",
+      "Icon": "imgs/actions/headline",
+      "PropertyInspectorPath": "ui/usage-headline.html",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [{ "Image": "imgs/actions/headline" }]
+    },
+    {
+      "UUID": "com.vladoportos.aimonitor.usagereset",
+      "Name": "Usage — Reset Countdown",
+      "Tooltip": "How long until the selected window resets",
+      "Icon": "imgs/actions/usage",
+      "PropertyInspectorPath": "ui/usage-reset.html",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [{ "Image": "imgs/actions/usage" }]
+    },
+    {
+      "UUID": "com.vladoportos.aimonitor.extra",
+      "Name": "Usage — Extra (€/$)",
+      "Tooltip": "Overage spend tracker",
+      "Icon": "imgs/actions/extra",
+      "PropertyInspectorPath": "ui/extra-usage.html",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [{ "Image": "imgs/actions/extra" }]
+    },
+    {
+      "UUID": "com.vladoportos.aimonitor.statusoverall",
+      "Name": "Status — Overall",
+      "Tooltip": "Anthropic platform status (all services)",
+      "Icon": "imgs/actions/status",
+      "PropertyInspectorPath": "ui/status-overall.html",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [{ "Image": "imgs/actions/status" }]
+    },
+    {
+      "UUID": "com.vladoportos.aimonitor.statuscomp",
+      "Name": "Status — Component",
+      "Tooltip": "Pick which Anthropic service to monitor",
+      "Icon": "imgs/actions/status",
+      "PropertyInspectorPath": "ui/status-component.html",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [{ "Image": "imgs/actions/status" }]
+    },
+    {
+      "UUID": "com.vladoportos.aimonitor.refresh",
+      "Name": "Refresh Now",
+      "Tooltip": "Force a poll of usage + status right now",
+      "Icon": "imgs/actions/refresh",
+      "PropertyInspectorPath": "ui/blank.html",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [{ "Image": "imgs/actions/refresh" }]
+    },
+    {
+      "UUID": "com.vladoportos.aimonitor.openweb",
+      "Name": "Open in Browser",
+      "Tooltip": "Open claude.ai/settings/usage (configurable)",
+      "Icon": "imgs/actions/open",
+      "PropertyInspectorPath": "ui/open-web.html",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [{ "Image": "imgs/actions/open" }]
+    }
+  ]
+}

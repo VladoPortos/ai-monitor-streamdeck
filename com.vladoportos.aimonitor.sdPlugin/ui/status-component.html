@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Status — Component</title>
+    <link rel="stylesheet" href="sdpi.css" />
+    <script src="sdpi.js"></script>
+  </head>
+  <body>
+    <div class="row">
+      <label for="component">Component</label>
+      <select id="component">
+        <option value="code">Claude Code</option>
+        <option value="api">Claude API</option>
+        <option value="web">claude.ai</option>
+        <option value="console">Claude Console</option>
+        <option value="cowork">Claude Cowork</option>
+        <option value="gov">Claude for Government</option>
+      </select>
+    </div>
+    <script>
+      SDPI.onReady(function (settings) {
+        const sel = document.getElementById("component");
+        sel.value = settings.component || "code";
+        sel.addEventListener("change", function () {
+          SDPI.setSettings({ component: sel.value });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+name: Trivy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly Monday 06:30 UTC, slightly offset from CodeQL
+    - cron: "30 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Filesystem vulnerability scan
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.2.1
+        with:
+          persist-credentials: false
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          # Skip the vendored Stream Deck plugin output if it ever exists locally;
+          # CI doesn't produce it because the .gitignore excludes the bin folder.
+          skip-dirs: com.vladoportos.aimonitor.sdPlugin/node_modules
+
+      - name: Upload SARIF results to GitHub code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@dd903d2e4f5405488e5ef1422510ee31c8b32357 # v3.27.0
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy-fs

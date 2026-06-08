@@ -1,0 +1,92 @@
+{
+  "page": {
+    "id": "tymt9n04zgry",
+    "name": "Claude",
+    "url": "http://status.claude.com",
+    "time_zone": "Etc/UTC",
+    "updated_at": "2026-05-17T11:55:00.000Z"
+  },
+  "components": [
+    {
+      "id": "rwppv331jlwc",
+      "name": "claude.ai",
+      "status": "partial_outage",
+      "created_at": "2023-07-11T17:52:24.275Z",
+      "updated_at": "2026-05-17T11:55:00.000Z",
+      "position": 1,
+      "description": null,
+      "showcase": true,
+      "start_date": "2023-07-11",
+      "group_id": null,
+      "page_id": "tymt9n04zgry",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "k8w3r06qmzrp",
+      "name": "Claude API (api.anthropic.com)",
+      "status": "major_outage",
+      "created_at": "2023-07-11T17:53:10.880Z",
+      "updated_at": "2026-05-17T11:55:00.000Z",
+      "position": 3,
+      "description": null,
+      "showcase": true,
+      "start_date": "2023-07-11",
+      "group_id": null,
+      "page_id": "tymt9n04zgry",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "yyzkbfz2thpt",
+      "name": "Claude Code",
+      "status": "major_outage",
+      "created_at": "2025-05-22T21:35:29.822Z",
+      "updated_at": "2026-05-17T11:55:00.000Z",
+      "position": 4,
+      "description": null,
+      "showcase": true,
+      "start_date": "2025-02-06",
+      "group_id": null,
+      "page_id": "tymt9n04zgry",
+      "group": false,
+      "only_show_if_degraded": false
+    }
+  ],
+  "incidents": [
+    {
+      "id": "incident-fixture-1",
+      "name": "Elevated error rates on Claude API",
+      "status": "identified",
+      "created_at": "2026-05-17T11:30:00.000Z",
+      "updated_at": "2026-05-17T11:50:00.000Z",
+      "monitoring_at": null,
+      "resolved_at": null,
+      "impact": "major",
+      "shortlink": "https://stspg.io/fixture",
+      "started_at": "2026-05-17T11:30:00.000Z",
+      "page_id": "tymt9n04zgry",
+      "incident_updates": [
+        {
+          "id": "update-fixture-1",
+          "status": "identified",
+          "body": "We have identified the root cause and are working on a fix.",
+          "incident_id": "incident-fixture-1",
+          "created_at": "2026-05-17T11:50:00.000Z",
+          "updated_at": "2026-05-17T11:50:00.000Z",
+          "display_at": "2026-05-17T11:50:00.000Z",
+          "affected_components": [],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": []
+    }
+  ],
+  "scheduled_maintenances": [],
+  "status": {
+    "indicator": "major",
+    "description": "Service Disruption"
+  }
+}

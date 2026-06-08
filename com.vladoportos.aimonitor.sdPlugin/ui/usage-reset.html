@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Usage Reset Countdown</title>
+    <link rel="stylesheet" href="sdpi.css" />
+    <script src="sdpi.js"></script>
+  </head>
+  <body>
+    <div class="row">
+      <label for="bucket">Bucket</label>
+      <select id="bucket">
+        <option value="five_hour">5-hour session</option>
+        <option value="seven_day">Weekly — All models</option>
+        <option value="seven_day_sonnet">Weekly — Sonnet</option>
+        <option value="seven_day_opus">Weekly — Opus</option>
+        <option value="seven_day_omelette">Weekly — Claude Design</option>
+      </select>
+    </div>
+    <p class="hint">Shows how long until the selected bucket resets, with a thin progress bar.</p>
+
+    <script>
+      SDPI.onReady(function (settings) {
+        const sel = document.getElementById("bucket");
+        sel.value = settings.bucket || "five_hour";
+        sel.addEventListener("change", function () {
+          SDPI.setSettings({ bucket: sel.value });
+        });
+      });
+    </script>
+  </body>
+</html>

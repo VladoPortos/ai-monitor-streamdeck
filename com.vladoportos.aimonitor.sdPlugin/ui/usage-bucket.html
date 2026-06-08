@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Usage Bucket</title>
+    <link rel="stylesheet" href="sdpi.css" />
+    <script src="sdpi.js"></script>
+  </head>
+  <body>
+    <div class="row">
+      <label for="bucket">Bucket</label>
+      <select id="bucket">
+        <option value="five_hour">5-hour session</option>
+        <option value="seven_day">Weekly — All models</option>
+        <option value="seven_day_sonnet">Weekly — Sonnet</option>
+        <option value="seven_day_opus">Weekly — Opus</option>
+        <option value="seven_day_omelette">Weekly — Claude Design</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="style">Style</label>
+      <select id="style">
+        <option value="ring">Ring (circular gauge)</option>
+        <option value="bar">Bar (big % + thick bar)</option>
+      </select>
+    </div>
+    <p class="hint">Tap key to open claude.ai/settings/usage in browser.</p>
+
+    <script>
+      SDPI.onReady(function (settings) {
+        const bucket = document.getElementById("bucket");
+        const style = document.getElementById("style");
+        bucket.value = settings.bucket || "five_hour";
+        style.value = settings.displayStyle || "ring";
+        function save() {
+          SDPI.setSettings({ bucket: bucket.value, displayStyle: style.value });
+        }
+        bucket.addEventListener("change", save);
+        style.addEventListener("change", save);
+      });
+    </script>
+  </body>
+</html>

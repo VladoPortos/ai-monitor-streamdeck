@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Open in Browser</title>
+    <link rel="stylesheet" href="sdpi.css" />
+    <script src="sdpi.js"></script>
+  </head>
+  <body>
+    <div class="row">
+      <label for="url">URL</label>
+      <input type="url" id="url" placeholder="https://claude.ai/settings/usage" />
+    </div>
+    <div class="row">
+      <label for="label">Label</label>
+      <input type="text" id="label" placeholder="Open" maxlength="20" />
+    </div>
+    <script>
+      SDPI.onReady(function (settings) {
+        const url = document.getElementById("url");
+        const label = document.getElementById("label");
+        url.value = settings.url || "";
+        label.value = settings.label || "";
+        function save() { SDPI.setSettings({ url: url.value.trim(), label: label.value.trim() }); }
+        url.addEventListener("change", save);
+        label.addEventListener("change", save);
+      });
+    </script>
+  </body>
+</html>

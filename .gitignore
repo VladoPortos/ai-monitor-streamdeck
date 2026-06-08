@@ -1,0 +1,57 @@
+# Node / TypeScript
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+.npm/
+.pnpm-store/
+pnpm-lock.yaml.bak
+
+# Stream Deck plugin build output
+*.streamDeckPlugin
+*.sdPlugin/bin/
+*.sdPlugin/logs/
+*.sdPlugin/node_modules/
+
+# Visual QA previews (regenerable)
+preview/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python (probe script + venvs)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Local secrets / credentials — never commit
+.env
+.env.*
+*.local
+credentials.json
+.credentials.json
+
+# Project-internal Claude Code session guidance (not for public repo)
+CLAUDE.md
+HANDOFF.md
+.ai-monitor-streamdeck/
+docs/superpowers/
+
+# Logs and runtime
+*.log
+logs/
+.cache/
+
+# Test artifacts
+coverage/
+.nyc_output/

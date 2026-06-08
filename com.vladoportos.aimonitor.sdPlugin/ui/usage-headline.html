@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Usage Headline</title>
+    <link rel="stylesheet" href="sdpi.css" />
+    <script src="sdpi.js"></script>
+  </head>
+  <body>
+    <div class="row">
+      <label for="style">Style</label>
+      <select id="style">
+        <option value="ring">Ring (circular gauge)</option>
+        <option value="bar">Bar (big % + thick bar)</option>
+      </select>
+    </div>
+    <div class="row">
+      <label>Exclude</label>
+      <div class="checks">
+        <label><input type="checkbox" data-b="five_hour"/> 5-hour session</label>
+        <label><input type="checkbox" data-b="seven_day"/> Weekly all-models</label>
+        <label><input type="checkbox" data-b="seven_day_sonnet"/> Weekly Sonnet</label>
+        <label><input type="checkbox" data-b="seven_day_opus"/> Weekly Opus</label>
+        <label><input type="checkbox" data-b="seven_day_omelette"/> Weekly Claude Design</label>
+      </div>
+    </div>
+    <p class="hint">Auto-shows whichever non-excluded bucket has the highest utilization.</p>
+
+    <script>
+      SDPI.onReady(function (settings) {
+        const style = document.getElementById("style");
+        style.value = settings.displayStyle || "ring";
+        const excluded = new Set(settings.excludeBuckets || []);
+        const boxes = document.querySelectorAll("input[type=checkbox][data-b]");
+        function save() {
+          const next = [];
+          boxes.forEach(function (b) { if (b.checked) next.push(b.dataset.b); });
+          SDPI.setSettings({ excludeBuckets: next, displayStyle: style.value });
+        }
+        boxes.forEach(function (box) {
+          box.checked = excluded.has(box.dataset.b);
+          box.addEventListener("change", save);
+        });
+        style.addEventListener("change", save);
+      });
+    </script>
+  </body>
+</html>
