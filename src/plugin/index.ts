@@ -194,10 +194,12 @@ async function main(): Promise<void> {
   usagePoller.start();
   statusPoller.start();
 
-  // Refresh on system wake to avoid showing stale data.
+  // Refresh on system wake to avoid showing stale data. Usage goes through the
+  // spacing guard so frequent sleep/wake cycles can't hammer the rate-limited
+  // /usage endpoint; status is public and unthrottled, so refresh it eagerly.
   streamDeck.system.onSystemDidWakeUp(() => {
     streamDeck.logger.info("System woke up; refreshing pollers.");
-    void usagePoller.pollNow();
+    void usagePoller.pollIfDue(USAGE_POLL_MS);
     void statusPoller.pollNow();
   });
 }
