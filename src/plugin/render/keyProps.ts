@@ -21,11 +21,16 @@ export type BucketName =
 
 export function bucketDisplayLabel(b: BucketName): string {
   switch (b) {
-    case "five_hour": return "5h";
-    case "seven_day": return "Weekly";
-    case "seven_day_sonnet": return "Sonnet";
-    case "seven_day_opus": return "Opus";
-    case "seven_day_omelette": return "Design";
+    case "five_hour":
+      return "5h";
+    case "seven_day":
+      return "Weekly";
+    case "seven_day_sonnet":
+      return "Sonnet";
+    case "seven_day_opus":
+      return "Opus";
+    case "seven_day_omelette":
+      return "Design";
   }
 }
 
@@ -112,15 +117,29 @@ export interface ResetCountdownComputedProps {
   unknown: boolean;
 }
 
-export function buildResetCountdownProps(input: BuildResetCountdownPropsInput): ResetCountdownComputedProps {
+export function buildResetCountdownProps(
+  input: BuildResetCountdownPropsInput,
+): ResetCountdownComputedProps {
   const bands = input.bands ?? DEFAULT_BANDS;
   const label = bucketDisplayLabel(input.bucket);
   if (input.veryStale || !input.snapshot) {
-    return { label, countdownText: "—", utilization: null, color: palette.textMuted, unknown: true };
+    return {
+      label,
+      countdownText: "—",
+      utilization: null,
+      color: palette.textMuted,
+      unknown: true,
+    };
   }
   const bucket = bucketAt(input.snapshot.data, input.bucket);
   if (!bucket) {
-    return { label, countdownText: "—", utilization: null, color: palette.textMuted, unknown: true };
+    return {
+      label,
+      countdownText: "—",
+      utilization: null,
+      color: palette.textMuted,
+      unknown: true,
+    };
   }
   return {
     label,
@@ -213,9 +232,8 @@ export function buildStatusOverallProps(input: BuildStatusOverallPropsInput): St
   const indicator = input.snapshot.data.status.indicator;
   const normalized: NormalizedStatusKey = normalizeStatusIndicator(indicator);
   const incidents = input.snapshot.data.incidents;
-  const description = incidents.length > 0
-    ? incidents[0]!.name
-    : input.snapshot.data.status.description;
+  const description =
+    incidents.length > 0 ? incidents[0]!.name : input.snapshot.data.status.description;
   return {
     label: "All Systems",
     description,
@@ -249,11 +267,17 @@ export function buildComponentStatusProps(input: BuildComponentStatusPropsInput)
 
 function humanizeComponentStatus(s: string): string {
   switch (s) {
-    case "operational": return "Operational";
-    case "under_maintenance": return "Maintenance";
-    case "degraded_performance": return "Degraded";
-    case "partial_outage": return "Partial outage";
-    case "major_outage": return "Major outage";
-    default: return s;
+    case "operational":
+      return "Operational";
+    case "under_maintenance":
+      return "Maintenance";
+    case "degraded_performance":
+      return "Degraded";
+    case "partial_outage":
+      return "Partial outage";
+    case "major_outage":
+      return "Major outage";
+    default:
+      return s;
   }
 }

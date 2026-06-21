@@ -16,7 +16,8 @@ const readFixture = (name: string) => {
 };
 
 const usageData = () => UsageResponse.parse(readFixture("usage-max20x-warning.json"));
-const statusData = () => StatusSummaryResponse.parse(readFixture("status-summary-operational.json"));
+const statusData = () =>
+  StatusSummaryResponse.parse(readFixture("status-summary-operational.json"));
 
 const mkAuth = (token = "tok-A") =>
   new AuthResolver({
@@ -47,7 +48,8 @@ describe("UsagePoller", () => {
 
   it("on auth failure, triggers refresh and retries the fetch once", async () => {
     const data = usageData();
-    const fetcher = vi.fn()
+    const fetcher = vi
+      .fn()
       .mockResolvedValueOnce({ ok: false, kind: "auth", status: 401 })
       .mockResolvedValueOnce({ ok: true, data, fetchedAt: new Date() });
     const refresh = vi.fn().mockResolvedValue({ ok: true });
@@ -72,7 +74,8 @@ describe("UsagePoller", () => {
 
   it("does not overwrite cached snapshot on transient network failure", async () => {
     const data = usageData();
-    const fetcher = vi.fn()
+    const fetcher = vi
+      .fn()
       .mockResolvedValueOnce({ ok: true, data, fetchedAt: new Date() })
       .mockResolvedValueOnce({ ok: false, kind: "network", cause: "ETIMEDOUT" });
     const store = new StateStore();
@@ -133,13 +136,20 @@ describe("UsagePoller", () => {
 
   it("backs off (2x base) after a rate_limit with no Retry-After", async () => {
     const data = usageData();
-    const fetcher = vi.fn()
+    const fetcher = vi
+      .fn()
       .mockResolvedValueOnce({ ok: false, kind: "rate_limit", retryAfterSec: null })
       .mockResolvedValue({ ok: true, data, fetchedAt: new Date() });
     const store = new StateStore();
     const auth = mkAuth();
     const poller = new UsagePoller({
-      fetcher, store, auth, intervalMs: 1000, maxBackoffMs: 100_000, endpoint: "x", betaHeader: "y",
+      fetcher,
+      store,
+      auth,
+      intervalMs: 1000,
+      maxBackoffMs: 100_000,
+      endpoint: "x",
+      betaHeader: "y",
     });
     poller.start();
     await vi.advanceTimersByTimeAsync(1000); // first poll → rate_limit
@@ -153,13 +163,20 @@ describe("UsagePoller", () => {
 
   it("honors the Retry-After header on a rate_limit", async () => {
     const data = usageData();
-    const fetcher = vi.fn()
+    const fetcher = vi
+      .fn()
       .mockResolvedValueOnce({ ok: false, kind: "rate_limit", retryAfterSec: 5 })
       .mockResolvedValue({ ok: true, data, fetchedAt: new Date() });
     const store = new StateStore();
     const auth = mkAuth();
     const poller = new UsagePoller({
-      fetcher, store, auth, intervalMs: 1000, maxBackoffMs: 100_000, endpoint: "x", betaHeader: "y",
+      fetcher,
+      store,
+      auth,
+      intervalMs: 1000,
+      maxBackoffMs: 100_000,
+      endpoint: "x",
+      betaHeader: "y",
     });
     poller.start();
     await vi.advanceTimersByTimeAsync(1000); // first poll → rate_limit, Retry-After 5s
@@ -173,13 +190,20 @@ describe("UsagePoller", () => {
 
   it("resets to the base interval after a successful poll", async () => {
     const data = usageData();
-    const fetcher = vi.fn()
+    const fetcher = vi
+      .fn()
       .mockResolvedValueOnce({ ok: false, kind: "rate_limit", retryAfterSec: null })
       .mockResolvedValue({ ok: true, data, fetchedAt: new Date() });
     const store = new StateStore();
     const auth = mkAuth();
     const poller = new UsagePoller({
-      fetcher, store, auth, intervalMs: 1000, maxBackoffMs: 100_000, endpoint: "x", betaHeader: "y",
+      fetcher,
+      store,
+      auth,
+      intervalMs: 1000,
+      maxBackoffMs: 100_000,
+      endpoint: "x",
+      betaHeader: "y",
     });
     poller.start();
     await vi.advanceTimersByTimeAsync(1000); // #1 rate_limit → backoff to 2000
@@ -204,7 +228,8 @@ describe("StatusPoller", () => {
 
   it("retains cache on schema failure", async () => {
     const data = statusData();
-    const fetcher = vi.fn()
+    const fetcher = vi
+      .fn()
       .mockResolvedValueOnce({ ok: true, data, fetchedAt: new Date() })
       .mockResolvedValueOnce({ ok: false, kind: "schema", cause: "bad" });
     const store = new StateStore();

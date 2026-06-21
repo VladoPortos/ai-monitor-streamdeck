@@ -104,7 +104,10 @@ describe("AuthResolver", () => {
     const read = vi.fn().mockResolvedValue(ok("t"));
     let resolveRefresh!: (v: RefreshResult) => void;
     const refresh = vi.fn().mockImplementation(
-      () => new Promise<RefreshResult>((res) => { resolveRefresh = res; }),
+      () =>
+        new Promise<RefreshResult>((res) => {
+          resolveRefresh = res;
+        }),
     );
     const r = new AuthResolver({ read, refresh });
 

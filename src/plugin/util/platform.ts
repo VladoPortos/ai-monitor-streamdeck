@@ -35,9 +35,17 @@ export function claudeBinaryCandidatesFor(p: Platform, home: string = homedir())
         norm(join(home, "AppData", "Local", "AnthropicClaude", "claude.exe")),
       ];
     case "mac":
-      return ["/usr/local/bin/claude", "/opt/homebrew/bin/claude", norm(join(home, ".local", "bin", "claude"))];
+      return [
+        "/usr/local/bin/claude",
+        "/opt/homebrew/bin/claude",
+        norm(join(home, ".local", "bin", "claude")),
+      ];
     case "linux":
-      return ["/usr/local/bin/claude", "/usr/bin/claude", norm(join(home, ".local", "bin", "claude"))];
+      return [
+        "/usr/local/bin/claude",
+        "/usr/bin/claude",
+        norm(join(home, ".local", "bin", "claude")),
+      ];
     default:
       return [];
   }

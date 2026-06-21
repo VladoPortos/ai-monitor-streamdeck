@@ -107,8 +107,8 @@ describe("buildExtraUsageTree", () => {
   it("formats currency amount", () => {
     const tree = buildExtraUsageTree({
       currency: "USD",
-      usedMinor: 1250,    // $12.50
-      limitMinor: 10000,  // $100.00
+      usedMinor: 1250, // $12.50
+      limitMinor: 10000, // $100.00
       utilization: 12.5,
       color: palette.ok,
       stale: false,

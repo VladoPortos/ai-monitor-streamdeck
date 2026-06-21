@@ -2,11 +2,7 @@ import { action, type KeyAction, type KeyDownEvent, type JsonObject } from "@elg
 import streamDeck from "@elgato/streamdeck";
 import { RerenderingAction } from "./baseRendering.js";
 import { buildUsageBucketTree, type DisplayStyle } from "../render/keyTrees.js";
-import {
-  buildUsageBucketProps,
-  pickHeadlineBucket,
-  type BucketName,
-} from "../render/keyProps.js";
+import { buildUsageBucketProps, pickHeadlineBucket, type BucketName } from "../render/keyProps.js";
 import { getPluginContext } from "../pluginContext.js";
 
 interface HeadlineSettings extends JsonObject {
@@ -38,7 +34,14 @@ export class UsageHeadlineAction extends RerenderingAction<HeadlineSettings> {
     const stale = freshness === "stale" || freshness === "very_stale";
     const veryStale = freshness === "very_stale";
     const bucket = pickHeadlineBucket({ snapshot, candidates }) ?? "five_hour";
-    const props = buildUsageBucketProps({ snapshot, bucket, now, stale, veryStale, ...(timeZone ? { timeZone } : {}) });
+    const props = buildUsageBucketProps({
+      snapshot,
+      bucket,
+      now,
+      stale,
+      veryStale,
+      ...(timeZone ? { timeZone } : {}),
+    });
     return buildUsageBucketTree({ ...props, style });
   }
 

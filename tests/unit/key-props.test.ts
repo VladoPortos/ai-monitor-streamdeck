@@ -111,7 +111,11 @@ describe("buildResetCountdownProps", () => {
 
   it("renders a real countdown for an active bucket", () => {
     const data = readFixture("usage-max20x-warning.json");
-    const props = buildResetCountdownProps({ snapshot: { data, fetchedAt: now }, bucket: "seven_day", now });
+    const props = buildResetCountdownProps({
+      snapshot: { data, fetchedAt: now },
+      bucket: "seven_day",
+      now,
+    });
     expect(props.unknown).toBe(false);
     expect(props.countdownText).not.toBe("—");
   });

@@ -2,10 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { mkdtempSync, rmSync, existsSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import {
-  saveSnapshotToDisk,
-  loadSnapshotFromDisk,
-} from "../../src/plugin/state/persistence.js";
+import { saveSnapshotToDisk, loadSnapshotFromDisk } from "../../src/plugin/state/persistence.js";
 import { StateStore } from "../../src/plugin/state/store.js";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -77,7 +74,11 @@ describe("snapshot persistence", () => {
   });
 
   it("loadSnapshotFromDisk ignores payloads that fail schema validation", async () => {
-    writeFileSync(file, JSON.stringify({ usage: { fetchedAt: "2026", data: { bogus: true } } }), "utf8");
+    writeFileSync(
+      file,
+      JSON.stringify({ usage: { fetchedAt: "2026", data: { bogus: true } } }),
+      "utf8",
+    );
     const store = new StateStore();
     await loadSnapshotFromDisk(store, file);
     expect(store.getUsage()).toBeNull();

@@ -44,7 +44,11 @@ export async function fetchUsage(opts: FetchUsageOptions): Promise<UsageFetchRes
     return { ok: false, kind: "auth", status: resp.status };
   }
   if (resp.status === 429) {
-    return { ok: false, kind: "rate_limit", retryAfterSec: parseRetryAfter(resp.headers?.["retry-after"]) };
+    return {
+      ok: false,
+      kind: "rate_limit",
+      retryAfterSec: parseRetryAfter(resp.headers?.["retry-after"]),
+    };
   }
   if (resp.status < 200 || resp.status >= 300) {
     return { ok: false, kind: "network", cause: `HTTP ${resp.status}` };
