@@ -56,6 +56,7 @@ export class UsagePoller {
   private timer: NodeJS.Timeout | null = null;
   private running = false;
   private consecutiveRateLimits = 0;
+  private lastPollAt = 0;
   constructor(private readonly opts: UsagePollerOptions) {}
 
   start(): void {
@@ -78,15 +79,38 @@ export class UsagePoller {
   }
 
   private async tick(): Promise<void> {
-    const result = await this.pollNow();
-    const delayMs = nextPollDelayMs(result, this.consecutiveRateLimits, {
-      baseMs: this.opts.intervalMs,
-      maxMs: this.opts.maxBackoffMs ?? DEFAULT_MAX_BACKOFF_MS,
-    });
+    let result: UsageFetchResult | null = null;
+    try {
+      result = await this.pollNow();
+    } catch (e) {
+      // pollNow is defensive today, but the recurring loop must never stop
+      // scheduling: a stray throw here would otherwise kill polling until the
+      // plugin restarts. Log it and fall back to the base cadence below.
+      this.opts.log?.(`usage poll: threw ${e instanceof Error ? e.message : String(e)}`);
+    }
+    const delayMs = result
+      ? nextPollDelayMs(result, this.consecutiveRateLimits, {
+          baseMs: this.opts.intervalMs,
+          maxMs: this.opts.maxBackoffMs ?? DEFAULT_MAX_BACKOFF_MS,
+        })
+      : this.opts.intervalMs;
     this.scheduleNext(delayMs);
   }
 
+  /**
+   * Poll only if at least `minSpacingMs` has elapsed since the last attempt.
+   *
+   * Ad-hoc triggers (e.g. the system-wake handler) use this instead of
+   * pollNow() so they cannot outpace the rate-limited /usage endpoint and
+   * re-enter a 429 lockout. The scheduled tick() loop is unaffected.
+   */
+  async pollIfDue(minSpacingMs: number): Promise<void> {
+    if (Date.now() - this.lastPollAt < minSpacingMs) return;
+    await this.pollNow();
+  }
+
   async pollNow(): Promise<UsageFetchResult> {
+    this.lastPollAt = Date.now();
     const result = await this.fetchOnce();
     if (result.ok) {
       this.consecutiveRateLimits = 0;

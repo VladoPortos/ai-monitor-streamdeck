@@ -188,6 +188,56 @@ describe("UsagePoller", () => {
     poller.stop();
   });
 
+  it("pollIfDue polls only after the spacing window has elapsed", async () => {
+    const data = usageData();
+    const fetcher = vi.fn().mockResolvedValue({ ok: true, data, fetchedAt: new Date() });
+    const store = new StateStore();
+    const auth = mkAuth();
+    const poller = new UsagePoller({
+      fetcher,
+      store,
+      auth,
+      intervalMs: 60_000,
+      endpoint: "x",
+      betaHeader: "y",
+    });
+    await poller.pollNow(); // establishes lastPollAt
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    await poller.pollIfDue(60_000); // 0ms since last → skipped
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(30_000);
+    await poller.pollIfDue(60_000); // 30s < 60s → skipped
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(30_000);
+    await poller.pollIfDue(60_000); // 60s elapsed → polls
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
+  it("keeps the recurring loop alive when a poll attempt throws", async () => {
+    const data = usageData();
+    const fetcher = vi
+      .fn()
+      .mockRejectedValueOnce(new Error("boom")) // first tick: pollNow rejects
+      .mockResolvedValue({ ok: true, data, fetchedAt: new Date() });
+    const store = new StateStore();
+    const auth = mkAuth();
+    const poller = new UsagePoller({
+      fetcher,
+      store,
+      auth,
+      intervalMs: 1000,
+      endpoint: "x",
+      betaHeader: "y",
+    });
+    poller.start();
+    await vi.advanceTimersByTimeAsync(1000); // tick #1 → fetcher throws
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(1000); // loop survived → tick #2 fires at base cadence
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(store.getUsage()?.data).toBe(data);
+    poller.stop();
+  });
+
   it("resets to the base interval after a successful poll", async () => {
     const data = usageData();
     const fetcher = vi
