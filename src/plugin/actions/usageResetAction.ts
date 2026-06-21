@@ -16,10 +16,11 @@ export class UsageResetAction extends RerenderingAction<UsageResetSettings> {
     settings: UsageResetSettings,
   ) {
     const bucket: BucketName = settings.bucket ?? "five_hour";
-    const { store } = getPluginContext();
+    const { store, freshnessBands } = getPluginContext();
     const now = new Date();
     const snapshot = store.getUsage();
-    const props = buildResetCountdownProps({ snapshot, bucket, now });
+    const veryStale = store.usageFreshness(now, freshnessBands) === "very_stale";
+    const props = buildResetCountdownProps({ snapshot, bucket, now, veryStale });
     return buildResetCountdownTree(props);
   }
 

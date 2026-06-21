@@ -51,16 +51,20 @@ const USAGE_ENDPOINT = "https://api.anthropic.com/api/oauth/usage";
 const USAGE_BETA_HEADER = "oauth-2025-04-20";
 const STATUS_ENDPOINT = "https://status.claude.com/api/v2/summary.json";
 const OPEN_WEB_DEFAULT = "https://claude.ai/settings/usage";
-const USAGE_POLL_MS = 60_000;
+// The OAuth /usage endpoint tolerates only ~1 request / 2 min; polling faster earns
+// sustained HTTP 429s. Poll every 5 min, and on a 429 the poller honors Retry-After
+// and backs off exponentially up to USAGE_MAX_BACKOFF_MS before trying again.
+const USAGE_POLL_MS = 5 * 60_000;
+const USAGE_MAX_BACKOFF_MS = 60 * 60_000;
 const STATUS_POLL_MS = 30_000;
 
-// Stale thresholds picked generously so a single failed poll (e.g. during a
-// token refresh that spawns `claude --init-only`) doesn't visibly mute the
-// colors. The colors only go grey if we've had no fresh data for >5 minutes.
+// Absolute staleness thresholds, independent of the poll cadence. After veryStaleMs
+// with no fresh data we render an em-dash rather than a frozen number — usage figures
+// are never presented as live once we can no longer trust them.
 const FRESHNESS_BANDS = {
-  agingMs: USAGE_POLL_MS,            // > 1 min = aging (internal only)
-  staleMs: USAGE_POLL_MS * 5,        // > 5 min = stale (visible mute)
-  veryStaleMs: USAGE_POLL_MS * 15,   // > 15 min = very stale (show em-dash)
+  agingMs: 5 * 60_000,      // > 5 min = aging (internal only)
+  staleMs: 10 * 60_000,     // > 10 min = stale (visible mute / glyph)
+  veryStaleMs: 15 * 60_000, // > 15 min = very stale (show em-dash)
 };
 
 // How long to wait between consecutive `claude --init-only` invocations.
@@ -137,6 +141,7 @@ async function main(): Promise<void> {
     store,
     auth,
     intervalMs: USAGE_POLL_MS,
+    maxBackoffMs: USAGE_MAX_BACKOFF_MS,
     endpoint: USAGE_ENDPOINT,
     betaHeader: USAGE_BETA_HEADER,
     log: (msg) => writeStartupLog(msg),

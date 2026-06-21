@@ -6,6 +6,7 @@ import { UsageResponse } from "../../src/plugin/api/types.js";
 import {
   bucketDisplayLabel,
   buildUsageBucketProps,
+  buildResetCountdownProps,
   pickHeadlineBucket,
   buildExtraUsageProps,
   type BucketName,
@@ -87,6 +88,44 @@ describe("buildUsageBucketProps", () => {
       stale: true,
     });
     expect(props.stale).toBe(true);
+  });
+
+  it("renders em-dash (unknown) when data is very stale", () => {
+    const data = readFixture("usage-max20x-warning.json");
+    const props = buildUsageBucketProps({
+      snapshot: { data, fetchedAt: now },
+      bucket: "seven_day",
+      now,
+      stale: true,
+      veryStale: true,
+    });
+    expect(props.unknown).toBe(true);
+    expect(props.percent).toBeNull();
+    expect(props.resetText).toBe("—");
+    expect(props.stale).toBe(true);
+  });
+});
+
+describe("buildResetCountdownProps", () => {
+  const now = new Date("2026-05-17T12:00:00Z");
+
+  it("renders a real countdown for an active bucket", () => {
+    const data = readFixture("usage-max20x-warning.json");
+    const props = buildResetCountdownProps({ snapshot: { data, fetchedAt: now }, bucket: "seven_day", now });
+    expect(props.unknown).toBe(false);
+    expect(props.countdownText).not.toBe("—");
+  });
+
+  it("renders em-dash (unknown) when data is very stale", () => {
+    const data = readFixture("usage-max20x-warning.json");
+    const props = buildResetCountdownProps({
+      snapshot: { data, fetchedAt: now },
+      bucket: "seven_day",
+      now,
+      veryStale: true,
+    });
+    expect(props.unknown).toBe(true);
+    expect(props.countdownText).toBe("—");
   });
 });
 
