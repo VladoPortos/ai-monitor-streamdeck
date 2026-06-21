@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src tests",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,html}\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,json,html}\" \"tests/**/*.ts\"",
     "pack": "node scripts/pack.mjs",
     "clean": "node -e \"const fs=require('fs');fs.rmSync('com.vladoportos.aimonitor.sdPlugin/bin',{recursive:true,force:true});\""
   },
