@@ -9,11 +9,7 @@ export interface RenderNode {
   };
 }
 
-const h = (
-  type: string,
-  style: Record<string, unknown>,
-  ...children: unknown[]
-): RenderNode => ({
+const h = (type: string, style: Record<string, unknown>, ...children: unknown[]): RenderNode => ({
   type,
   props: { style, children: children.flat() },
 });
@@ -162,7 +158,12 @@ export function buildUsageBucketBarTree(props: UsageBucketProps): RenderNode {
     // top row: bold label + optional stale icon
     h(
       "div",
-      { display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+      {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+      },
       text(props.label.toUpperCase(), {
         fontSize: 11,
         fontWeight: 700,
@@ -245,18 +246,24 @@ export function buildExtraUsageTree(props: ExtraUsageProps): RenderNode {
         justifyContent: "center",
         alignItems: "center",
       },
-      text("EXTRA", { fontSize: 11, fontWeight: 700, color: palette.textMuted, letterSpacing: "0.06em" }),
+      text("EXTRA", {
+        fontSize: 11,
+        fontWeight: 700,
+        color: palette.textMuted,
+        letterSpacing: "0.06em",
+      }),
       text("Disabled", { fontSize: 18, color: palette.textMuted, marginTop: 8 }),
     );
   }
 
   const usedText = formatMoney(props.usedMinor, props.currency);
   const limitText = formatMoney(props.limitMinor, props.currency);
-  const pct = props.utilization !== null
-    ? Math.round(props.utilization)
-    : props.limitMinor > 0
-      ? Math.round((props.usedMinor / props.limitMinor) * 100)
-      : 0;
+  const pct =
+    props.utilization !== null
+      ? Math.round(props.utilization)
+      : props.limitMinor > 0
+        ? Math.round((props.usedMinor / props.limitMinor) * 100)
+        : 0;
 
   const BAR_THICK = 14;
   const valueColor = props.color;
@@ -276,13 +283,29 @@ export function buildExtraUsageTree(props: ExtraUsageProps): RenderNode {
     },
     h(
       "div",
-      { display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-      text("EXTRA", { fontSize: 11, fontWeight: 700, color: palette.textMuted, letterSpacing: "0.06em" }),
+      {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+      },
+      text("EXTRA", {
+        fontSize: 11,
+        fontWeight: 700,
+        color: palette.textMuted,
+        letterSpacing: "0.06em",
+      }),
       text(`${pct}%`, { fontSize: 11, fontWeight: 700, color: valueColor }),
     ),
     h(
       "div",
-      { display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1, justifyContent: "center" },
+      {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        flexGrow: 1,
+        justifyContent: "center",
+      },
       text(usedText, {
         fontSize: 30,
         fontWeight: 700,
@@ -328,9 +351,8 @@ export interface ResetCountdownProps {
 }
 
 export function buildResetCountdownTree(props: ResetCountdownProps): RenderNode {
-  const pct = props.unknown || props.utilization === null
-    ? 0
-    : Math.min(100, Math.max(0, props.utilization));
+  const pct =
+    props.unknown || props.utilization === null ? 0 : Math.min(100, Math.max(0, props.utilization));
   const valueColor = props.unknown ? palette.textMuted : props.color;
   const fillColor = props.unknown ? palette.textMuted : props.color;
 

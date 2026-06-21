@@ -26,9 +26,15 @@ export class StateStore {
   private auth: AuthState = "unknown";
   private listeners = new Set<StateChangeListener>();
 
-  getUsage(): UsageSnapshot | null { return this.usage; }
-  getStatus(): StatusSnapshot | null { return this.status; }
-  getAuthState(): AuthState { return this.auth; }
+  getUsage(): UsageSnapshot | null {
+    return this.usage;
+  }
+  getStatus(): StatusSnapshot | null {
+    return this.status;
+  }
+  getAuthState(): AuthState {
+    return this.auth;
+  }
 
   setUsage(snapshot: UsageSnapshot): void {
     this.usage = snapshot;
@@ -59,7 +65,11 @@ export class StateStore {
 
   private emit(): void {
     for (const fn of this.listeners) {
-      try { fn(); } catch { /* listener errors don't break store */ }
+      try {
+        fn();
+      } catch {
+        /* listener errors don't break store */
+      }
     }
   }
 }

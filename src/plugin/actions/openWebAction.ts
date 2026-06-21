@@ -34,7 +34,10 @@ export class OpenWebAction extends SingletonAction<OpenWebSettings> {
     await streamDeck.system.openUrl(url);
   }
 
-  private async render(action: KeyAction<OpenWebSettings>, settings: OpenWebSettings): Promise<void> {
+  private async render(
+    action: KeyAction<OpenWebSettings>,
+    settings: OpenWebSettings,
+  ): Promise<void> {
     const tree = buildSimpleIconTree({
       glyph: "✦",
       sublabel: settings.label || "Open",

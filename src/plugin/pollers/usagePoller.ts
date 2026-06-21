@@ -94,7 +94,8 @@ export class UsagePoller {
       this.opts.store.setAuthState("ok");
       this.opts.log?.("usage poll: ok");
     } else {
-      this.consecutiveRateLimits = result.kind === "rate_limit" ? this.consecutiveRateLimits + 1 : 0;
+      this.consecutiveRateLimits =
+        result.kind === "rate_limit" ? this.consecutiveRateLimits + 1 : 0;
       this.opts.log?.(
         `usage poll: ${result.kind}${"status" in result ? ` (${result.status})` : ""}${"cause" in result ? ` ${result.cause}` : ""}`,
       );

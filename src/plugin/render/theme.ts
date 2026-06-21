@@ -8,7 +8,7 @@ export const palette = {
   text: "#f5f5f4",
   textMuted: "#a3a3a3",
   accent: "#cc785c",
-  ok: "#16d97e",         // brighter, more saturated than tailwind green-500
+  ok: "#16d97e", // brighter, more saturated than tailwind green-500
   warn: "#f59e0b",
   caution: "#f97316",
   danger: "#ef4444",
@@ -26,9 +26,13 @@ export const font = {
 /** Map a normalized service-status enum to a palette color. */
 export function statusColor(status: "ok" | "degraded" | "outage" | "maintenance"): string {
   switch (status) {
-    case "ok": return palette.ok;
-    case "degraded": return palette.warn;
-    case "outage": return palette.danger;
-    case "maintenance": return palette.maintenance;
+    case "ok":
+      return palette.ok;
+    case "degraded":
+      return palette.warn;
+    case "outage":
+      return palette.danger;
+    case "maintenance":
+      return palette.maintenance;
   }
 }

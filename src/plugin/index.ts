@@ -15,17 +15,24 @@ function writeStartupLog(line: string): void {
   try {
     mkdirSync(join(homedir(), ".ai-monitor-streamdeck"), { recursive: true });
     appendFileSync(CRASH_LOG, `[${new Date().toISOString()}] ${line}\n`);
-  } catch { /* don't crash trying to log a crash */ }
+  } catch {
+    /* don't crash trying to log a crash */
+  }
 }
 
 process.on("uncaughtException", (e) => {
-  writeStartupLog(`uncaughtException: ${e instanceof Error ? e.stack ?? e.message : String(e)}`);
+  writeStartupLog(`uncaughtException: ${e instanceof Error ? (e.stack ?? e.message) : String(e)}`);
 });
 process.on("unhandledRejection", (r) => {
-  writeStartupLog(`unhandledRejection: ${r instanceof Error ? r.stack ?? r.message : String(r)}`);
+  writeStartupLog(`unhandledRejection: ${r instanceof Error ? (r.stack ?? r.message) : String(r)}`);
 });
 
-import { detectPlatform, credentialsPathFor, claudeBinaryCandidatesFor, emptyStdinRedirectFor } from "./util/platform.js";
+import {
+  detectPlatform,
+  credentialsPathFor,
+  claudeBinaryCandidatesFor,
+  emptyStdinRedirectFor,
+} from "./util/platform.js";
 import { AuthResolver } from "./auth/authResolver.js";
 import { readOAuthToken } from "./auth/credentialsReader.js";
 import { refreshToken } from "./auth/tokenRefresher.js";
@@ -62,8 +69,8 @@ const STATUS_POLL_MS = 30_000;
 // with no fresh data we render an em-dash rather than a frozen number — usage figures
 // are never presented as live once we can no longer trust them.
 const FRESHNESS_BANDS = {
-  agingMs: 5 * 60_000,      // > 5 min = aging (internal only)
-  staleMs: 10 * 60_000,     // > 10 min = stale (visible mute / glyph)
+  agingMs: 5 * 60_000, // > 5 min = aging (internal only)
+  staleMs: 10 * 60_000, // > 10 min = stale (visible mute / glyph)
   veryStaleMs: 15 * 60_000, // > 15 min = very stale (show em-dash)
 };
 
@@ -87,7 +94,7 @@ async function main(): Promise<void> {
     await loadFonts(fontsDir);
     writeStartupLog("fonts loaded");
   } catch (e) {
-    writeStartupLog(`font load failed: ${e instanceof Error ? e.stack ?? e.message : e}`);
+    writeStartupLog(`font load failed: ${e instanceof Error ? (e.stack ?? e.message) : e}`);
     throw e;
   }
   streamDeck.logger.info("Fonts loaded.");
@@ -108,7 +115,9 @@ async function main(): Promise<void> {
       const start = Date.now();
       writeStartupLog(`auth refresh: spawning '${binaryCandidate} --init-only'`);
       const r = await refreshToken({ binary: binaryCandidate, stdinRedirect });
-      writeStartupLog(`auth refresh: ${r.ok ? "ok" : `failed (${r.cause})`} after ${Date.now() - start}ms`);
+      writeStartupLog(
+        `auth refresh: ${r.ok ? "ok" : `failed (${r.cause})`} after ${Date.now() - start}ms`,
+      );
       return r;
     },
     cooldownMs: AUTH_REFRESH_COOLDOWN_MS,
@@ -194,8 +203,12 @@ async function main(): Promise<void> {
 }
 
 main().catch((e) => {
-  writeStartupLog(`bootstrap failed: ${e instanceof Error ? e.stack ?? e.message : e}`);
+  writeStartupLog(`bootstrap failed: ${e instanceof Error ? (e.stack ?? e.message) : e}`);
   try {
-    streamDeck.logger.error(`Plugin bootstrap failed: ${e instanceof Error ? e.stack ?? e.message : e}`);
-  } catch { /* logger may not be initialized yet */ }
+    streamDeck.logger.error(
+      `Plugin bootstrap failed: ${e instanceof Error ? (e.stack ?? e.message) : e}`,
+    );
+  } catch {
+    /* logger may not be initialized yet */
+  }
 });

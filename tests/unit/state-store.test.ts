@@ -12,7 +12,8 @@ const readFixture = (name: string) => {
 };
 
 const sampleUsage = () => UsageResponse.parse(readFixture("usage-max20x-warning.json"));
-const sampleStatus = () => StatusSummaryResponse.parse(readFixture("status-summary-operational.json"));
+const sampleStatus = () =>
+  StatusSummaryResponse.parse(readFixture("status-summary-operational.json"));
 
 describe("StateStore", () => {
   it("starts empty", () => {

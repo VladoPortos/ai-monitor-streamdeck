@@ -24,7 +24,14 @@ export class UsageBucketAction extends RerenderingAction<UsageBucketSettings> {
     const freshness = store.usageFreshness(now, freshnessBands);
     const stale = freshness === "stale" || freshness === "very_stale";
     const veryStale = freshness === "very_stale";
-    const props = buildUsageBucketProps({ snapshot, bucket, now, stale, veryStale, ...(timeZone ? { timeZone } : {}) });
+    const props = buildUsageBucketProps({
+      snapshot,
+      bucket,
+      now,
+      stale,
+      veryStale,
+      ...(timeZone ? { timeZone } : {}),
+    });
     return buildUsageBucketTree({ ...props, style });
   }
 
