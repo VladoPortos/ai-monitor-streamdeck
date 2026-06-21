@@ -1,6 +1,6 @@
 {
   "Name": "AI Monitor",
-  "Version": "0.1.0",
+  "Version": "0.1.1",
   "Author": "Vladimir Strycek",
   "Description": "Anthropic plan usage and service status on your Stream Deck — account-wide, zero per-machine setup.",
   "Category": "Productivity",
