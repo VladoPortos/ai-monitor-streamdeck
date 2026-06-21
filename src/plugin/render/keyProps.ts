@@ -39,6 +39,8 @@ export interface BuildUsageBucketPropsInput {
   bucket: BucketName;
   now: Date;
   stale: boolean;
+  /** Data is past the very-stale threshold: render an em-dash rather than a frozen number. */
+  veryStale?: boolean;
   bands?: ColorBands;
   timeZone?: string;
 }
@@ -46,6 +48,17 @@ export interface BuildUsageBucketPropsInput {
 export function buildUsageBucketProps(input: BuildUsageBucketPropsInput): UsageBucketProps {
   const bands = input.bands ?? DEFAULT_BANDS;
   const label = bucketDisplayLabel(input.bucket);
+
+  if (input.veryStale) {
+    return {
+      label,
+      percent: null,
+      color: palette.textMuted,
+      resetText: "—",
+      stale: input.stale,
+      unknown: true,
+    };
+  }
 
   if (!input.snapshot) {
     return {
@@ -86,6 +99,8 @@ export interface BuildResetCountdownPropsInput {
   snapshot: UsageSnapshot | null;
   bucket: BucketName;
   now: Date;
+  /** Data is past the very-stale threshold: render an em-dash rather than a frozen countdown. */
+  veryStale?: boolean;
   bands?: ColorBands;
 }
 
@@ -100,7 +115,7 @@ export interface ResetCountdownComputedProps {
 export function buildResetCountdownProps(input: BuildResetCountdownPropsInput): ResetCountdownComputedProps {
   const bands = input.bands ?? DEFAULT_BANDS;
   const label = bucketDisplayLabel(input.bucket);
-  if (!input.snapshot) {
+  if (input.veryStale || !input.snapshot) {
     return { label, countdownText: "—", utilization: null, color: palette.textMuted, unknown: true };
   }
   const bucket = bucketAt(input.snapshot.data, input.bucket);
