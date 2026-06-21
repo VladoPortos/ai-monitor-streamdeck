@@ -1,0 +1,8 @@
+# Normalize line endings: store LF in the repo and check out LF in working
+# trees on every platform. Resolves the Prettier (endOfLine) vs Windows
+# core.autocrlf churn that made `prettier --check` fail and `npm run format`
+# produce phantom diffs on Windows.
+* text=auto eol=lf
+
+# Fonts are binary — never apply text/EOL filters.
+*.ttf binary
