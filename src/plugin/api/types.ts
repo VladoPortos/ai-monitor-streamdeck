@@ -14,10 +14,10 @@ const NullableBucket = z.union([UtilizationBucket, z.null()]);
 
 export const ExtraUsage = z.object({
   is_enabled: z.boolean(),
-  monthly_limit: z.number(),
-  used_credits: z.number(),
+  monthly_limit: z.number().nullable().optional().default(null),
+  used_credits: z.number().nullable().optional().default(null),
   utilization: z.number().nullable(),
-  currency: z.string(),
+  currency: z.string().nullable().optional().default(null),
   disabled_reason: z.string().nullable(),
 });
 

@@ -57,6 +57,7 @@ export class UsagePoller {
   private running = false;
   private consecutiveRateLimits = 0;
   private lastPollAt = 0;
+  private inFlight: Promise<UsageFetchResult> | null = null;
   constructor(private readonly opts: UsagePollerOptions) {}
 
   start(): void {
@@ -104,12 +105,23 @@ export class UsagePoller {
    * pollNow() so they cannot outpace the rate-limited /usage endpoint and
    * re-enter a 429 lockout. The scheduled tick() loop is unaffected.
    */
-  async pollIfDue(minSpacingMs: number): Promise<void> {
-    if (Date.now() - this.lastPollAt < minSpacingMs) return;
-    await this.pollNow();
+  async pollIfDue(minSpacingMs: number): Promise<UsageFetchResult | null> {
+    if (Date.now() - this.lastPollAt < minSpacingMs) return null;
+    return this.pollNow();
   }
 
   async pollNow(): Promise<UsageFetchResult> {
+    if (this.inFlight) return await this.inFlight;
+    const run = this.executePoll();
+    this.inFlight = run;
+    try {
+      return await run;
+    } finally {
+      if (this.inFlight === run) this.inFlight = null;
+    }
+  }
+
+  private async executePoll(): Promise<UsageFetchResult> {
     this.lastPollAt = Date.now();
     const result = await this.fetchOnce();
     if (result.ok) {

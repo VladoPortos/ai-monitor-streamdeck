@@ -1,6 +1,6 @@
 {
   "name": "ai-monitor-streamdeck",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Stream Deck plugin: Anthropic plan usage + service status, account-wide via OAuth, zero per-machine setup.",
   "private": true,
   "type": "module",

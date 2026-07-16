@@ -1,0 +1,68 @@
+{
+  "five_hour": {
+    "utilization": 42.5,
+    "resets_at": "2026-07-16T10:00:00.000000+00:00"
+  },
+  "seven_day": {
+    "utilization": 17.25,
+    "resets_at": "2026-07-20T10:00:00.000000+00:00"
+  },
+  "seven_day_oauth_apps": null,
+  "seven_day_opus": null,
+  "seven_day_sonnet": null,
+  "seven_day_cowork": null,
+  "seven_day_omelette": null,
+  "tangelo": null,
+  "iguana_necktie": null,
+  "omelette_promotional": null,
+  "nimbus_quill": null,
+  "cinder_cove": null,
+  "amber_ladder": null,
+  "extra_usage": {
+    "is_enabled": false,
+    "monthly_limit": null,
+    "used_credits": null,
+    "utilization": null,
+    "currency": null,
+    "decimal_places": null,
+    "disabled_reason": null,
+    "daily": null,
+    "weekly": null
+  },
+  "limits": [
+    {
+      "kind": "session",
+      "group": "session",
+      "percent": 42.5,
+      "severity": "normal",
+      "resets_at": "2026-07-16T10:00:00.000000+00:00",
+      "scope": null,
+      "is_active": true
+    },
+    {
+      "kind": "weekly_all",
+      "group": "weekly",
+      "percent": 17.25,
+      "severity": "normal",
+      "resets_at": "2026-07-20T10:00:00.000000+00:00",
+      "scope": null,
+      "is_active": true
+    },
+    {
+      "kind": "weekly_scoped",
+      "group": "weekly",
+      "percent": 3.5,
+      "severity": "normal",
+      "resets_at": "2026-07-20T10:00:00.000000+00:00",
+      "scope": {
+        "model": {
+          "id": null,
+          "display_name": "Synthetic Model"
+        }
+      },
+      "is_active": true
+    }
+  ],
+  "spend": {},
+  "member_dashboard_available": true
+}

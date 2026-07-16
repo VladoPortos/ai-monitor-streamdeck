@@ -10,6 +10,7 @@ import { renderToPng } from "../render/renderer.js";
 import { buildSimpleIconTree } from "../render/keyTrees.js";
 import { palette } from "../render/theme.js";
 import { getPluginContext } from "../pluginContext.js";
+import { MANUAL_USAGE_MIN_SPACING_MS, refreshSucceeded } from "./refreshPolicy.js";
 
 const MIN_INTERVAL_MS = 10_000;
 
@@ -33,8 +34,15 @@ export class RefreshAction extends SingletonAction<JsonObject> {
     this.lastTrigger = now;
     try {
       const { usagePoller, statusPoller } = getPluginContext();
-      await Promise.all([usagePoller.pollNow(), statusPoller.pollNow()]);
-      await ev.action.showOk();
+      const [usageResult, statusResult] = await Promise.all([
+        usagePoller.pollIfDue(MANUAL_USAGE_MIN_SPACING_MS),
+        statusPoller.pollNow(),
+      ]);
+      if (refreshSucceeded(usageResult, statusResult)) {
+        await ev.action.showOk();
+      } else {
+        await ev.action.showAlert();
+      }
     } catch {
       await ev.action.showAlert();
     }

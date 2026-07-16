@@ -55,6 +55,16 @@ describe("UsageResponse schema", () => {
     expect(parsed.seven_day_omelette).toBeNull();
   });
 
+  it("parses disabled extra usage when monetary fields are null", () => {
+    const parsed = UsageResponse.parse(readJson("usage-disabled-extra-null.json"));
+    expect(parsed.five_hour.utilization).toBe(42.5);
+    expect(parsed.seven_day.utilization).toBe(17.25);
+    expect(parsed.extra_usage.is_enabled).toBe(false);
+    expect(parsed.extra_usage.monthly_limit).toBeNull();
+    expect(parsed.extra_usage.used_credits).toBeNull();
+    expect(parsed.extra_usage.currency).toBeNull();
+  });
+
   it("rejects payload missing required five_hour bucket", () => {
     const bad = { ...readJson("usage-max20x-idle.json") };
     delete bad.five_hour;

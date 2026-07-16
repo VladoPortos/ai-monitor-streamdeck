@@ -213,6 +213,55 @@ describe("UsagePoller", () => {
     expect(fetcher).toHaveBeenCalledTimes(2);
   });
 
+  it("returns null when pollIfDue is throttled and a result when due", async () => {
+    const data = usageData();
+    const fetcher = vi.fn().mockResolvedValue({ ok: true, data, fetchedAt: new Date() });
+    const poller = new UsagePoller({
+      fetcher,
+      store: new StateStore(),
+      auth: mkAuth(),
+      intervalMs: 60_000,
+      endpoint: "x",
+      betaHeader: "y",
+    });
+
+    await poller.pollNow();
+    await expect(poller.pollIfDue(60_000)).resolves.toBeNull();
+    await vi.advanceTimersByTimeAsync(60_000);
+    const dueResult = await poller.pollIfDue(60_000);
+    expect(dueResult?.ok).toBe(true);
+  });
+
+  it("coalesces concurrent pollNow calls into one request", async () => {
+    const data = usageData();
+    let release!: () => void;
+    const gate = new Promise<void>((resolveGate) => {
+      release = resolveGate;
+    });
+    const result: UsageFetchResult = { ok: true, data, fetchedAt: new Date() };
+    const fetcher = vi.fn(async () => {
+      await gate;
+      return result;
+    });
+    const poller = new UsagePoller({
+      fetcher,
+      store: new StateStore(),
+      auth: mkAuth(),
+      intervalMs: 60_000,
+      endpoint: "x",
+      betaHeader: "y",
+    });
+
+    const first = poller.pollNow();
+    const second = poller.pollNow();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    release();
+    await expect(first).resolves.toBe(result);
+    await expect(second).resolves.toBe(result);
+  });
+
   it("keeps the recurring loop alive when a poll attempt throws", async () => {
     const data = usageData();
     const fetcher = vi
@@ -287,6 +336,17 @@ describe("StatusPoller", () => {
     await poller.pollNow();
     await poller.pollNow();
     expect(store.getStatus()?.data).toBe(data);
+  });
+
+  it("returns the structured fetch result", async () => {
+    const failure = { ok: false, kind: "network", cause: "offline" } as const;
+    const poller = new StatusPoller({
+      fetcher: vi.fn().mockResolvedValue(failure),
+      store: new StateStore(),
+      intervalMs: 30_000,
+      endpoint: "x",
+    });
+    await expect(poller.pollNow()).resolves.toBe(failure);
   });
 });
 

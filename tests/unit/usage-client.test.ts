@@ -29,6 +29,24 @@ describe("fetchUsage", () => {
     }
   });
 
+  it("keeps core usage when disabled extra-usage values are null", async () => {
+    const fetcher = vi.fn().mockResolvedValue({
+      status: 200,
+      body: readFixture("usage-disabled-extra-null.json"),
+    });
+    const result = await fetchUsage({
+      endpoint: "https://api.anthropic.com/api/oauth/usage",
+      betaHeader: "oauth-2025-04-20",
+      bearerToken: "tok-1",
+      fetcher,
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.five_hour.utilization).toBe(42.5);
+      expect(result.data.seven_day.utilization).toBe(17.25);
+    }
+  });
+
   it("sends Authorization Bearer + beta header", async () => {
     const fetcher = vi.fn().mockResolvedValue({
       status: 200,
