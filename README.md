@@ -33,12 +33,13 @@ Because the data is account-wide, **a single Stream Deck host sees usage from ev
 
 Service status comes from the public Statuspage feed at `https://status.claude.com/api/v2/summary.json`.
 
-## What you get (7 actions)
+## What you get (8 actions)
 
 | Action | Purpose |
 |---|---|
 | **Usage — Bucket** | One specific bar: 5h / Weekly / Sonnet / Opus / Claude Design |
 | **Usage — Headline** | Auto-tracks the highest-utilization bucket; great as a "what should I care about?" key |
+| **Usage — Reset Countdown** | Shows how long remains before the selected usage window resets |
 | **Usage — Extra (€/$)** | Monthly overage spend vs limit |
 | **Status — Overall** | Single colored dot for overall Anthropic platform status |
 | **Status — Component** | Same, scoped to one component (Claude Code, API, claude.ai, …) |
@@ -97,13 +98,13 @@ No API keys, no cookies — everything pulled from your local Claude Code instal
 The OAuth usage endpoint is currently a beta surface (`anthropic-beta: oauth-2025-04-20`). It may change without notice. Defenses:
 
 1. **Stale-badge protocol** — when the endpoint stops returning expected data, keys show last-known-good values with a `↻` overlay (never fake new numbers).
-2. **Endpoint override** — settings let you change the URL and beta header without code edits.
-3. **Cookie fallback** (v1.1) — falls back to the equivalent endpoint on `claude.ai`.
+2. **Runtime schema validation** — malformed optional data cannot silently become fake usage values.
+3. **Cookie fallback** (planned) — a future release can fall back to the equivalent endpoint on `claude.ai`.
 
 ## Development
 
 ```bash
-npm test               # 135 unit tests across 15 files
+npm test               # 160 unit tests across 16 files
 npm run typecheck      # strict TS, no any
 npm run build          # tsup bundle
 npm run pack           # full .streamDeckPlugin package
@@ -115,7 +116,7 @@ Architecture summary: data flows from a 60-second poller (`src/plugin/pollers/us
 
 ## Status
 
-**v0.1.0 — pre-release.** Full code path implemented, 135 unit tests green, rendering verified, plugin packages cleanly. Pending: install on real hardware and visual verification across actions. PRs and bug reports welcome.
+**v0.1.2 — hardware verified.** Usage polling, rendering, OAuth refresh, and service status have been verified on a standard 15-key Stream Deck. The suite has 160 passing tests across 16 files. PRs and bug reports welcome.
 
 ## License
 

@@ -142,6 +142,15 @@ describe("buildExtraUsageProps", () => {
     expect(props.disabled).toBe(true);
   });
 
+  it("renders disabled extra usage when monetary fields are null", () => {
+    const data = readFixture("usage-disabled-extra-null.json");
+    const props = buildExtraUsageProps({ snapshot: { data, fetchedAt: now }, now, stale: false });
+    expect(props.disabled).toBe(true);
+    expect(props.usedMinor).toBe(0);
+    expect(props.limitMinor).toBe(0);
+    expect(props.currency).toBe("USD");
+  });
+
   it("renders amounts and color from utilization", () => {
     const data = readFixture("usage-max20x-warning.json");
     const props = buildExtraUsageProps({ snapshot: { data, fetchedAt: now }, now, stale: false });

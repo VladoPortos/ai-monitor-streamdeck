@@ -26,10 +26,11 @@ export class StatusPoller {
     }
   }
 
-  async pollNow(): Promise<void> {
+  async pollNow(): Promise<StatusFetchResult> {
     const result = await this.opts.fetcher({ endpoint: this.opts.endpoint });
     if (result.ok) {
       this.opts.store.setStatus({ data: result.data, fetchedAt: result.fetchedAt });
     }
+    return result;
   }
 }

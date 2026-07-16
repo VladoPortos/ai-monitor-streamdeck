@@ -171,11 +171,13 @@ export function buildExtraUsageProps(input: BuildExtraUsagePropsInput): ExtraUsa
     };
   }
   const e = input.snapshot.data.extra_usage;
-  const pct = e.utilization ?? (e.monthly_limit > 0 ? (e.used_credits / e.monthly_limit) * 100 : 0);
+  const monthlyLimit = e.monthly_limit ?? 0;
+  const usedCredits = e.used_credits ?? 0;
+  const pct = e.utilization ?? (monthlyLimit > 0 ? (usedCredits / monthlyLimit) * 100 : 0);
   return {
-    currency: e.currency,
-    usedMinor: e.used_credits,
-    limitMinor: e.monthly_limit,
+    currency: e.currency ?? "USD",
+    usedMinor: usedCredits,
+    limitMinor: monthlyLimit,
     utilization: e.utilization,
     color: gradeColor(pct, bands),
     stale: input.stale,
