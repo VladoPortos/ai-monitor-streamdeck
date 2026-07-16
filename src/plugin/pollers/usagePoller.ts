@@ -111,7 +111,7 @@ export class UsagePoller {
   }
 
   async pollNow(): Promise<UsageFetchResult> {
-    if (this.inFlight) return this.inFlight;
+    if (this.inFlight) return await this.inFlight;
     const run = this.executePoll();
     this.inFlight = run;
     try {
